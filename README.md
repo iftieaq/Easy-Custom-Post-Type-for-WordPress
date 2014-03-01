@@ -32,7 +32,7 @@ $video->post_type('page');
 
 That's not everything, However you can also create custom taxonomy for post your post type. If you want to create a taxonomy like categories, here is an example. The first parameater will be a name what you want and the second parameater is taxonomy type. It can be 'cats' or 'tags'. 
 
-$video->add_tax('Type', 'cats');
+<pre><code>$video->add_tax('Type', 'cats');</code></pre>
 
 To create a taxonomy like tags, use this
 
