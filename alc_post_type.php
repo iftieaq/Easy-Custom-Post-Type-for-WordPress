@@ -49,7 +49,7 @@ class Alc_post_type
         $this->post_type();
         
         $this->updated_message('change_messages');
-        $this->add_init(create_post_type);
+        $this->add_init('create_post_type');
 	}
     
 	/**
