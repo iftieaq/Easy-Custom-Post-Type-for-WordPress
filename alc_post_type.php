@@ -20,13 +20,13 @@
  
 class Alc_post_type
 {
-	
+    
     public $type_name;
     public $type_type;
     public $label_args;
     public $supports_args;
     
-	/**
+    /**
      * The constructor
      *
      * Accepts the type name and supports array
@@ -36,114 +36,111 @@ class Alc_post_type
      * @param array $supports post supports list such as thumbnail, title, content etc.
      * 
      */
-	 
+     
     function __construct($name = '', $supports = array())
-	{
-		
-		// set post type name
+    {
+        
+        // set post type name
         $this->type_name = strtolower($name);
         
-		// call internal methods
+        // call internal methods
         $this->change_labels();
         $this->supports($supports);
         $this->post_type();
         
         $this->updated_message('change_messages');
         $this->add_init('create_post_type');
-	}
+    }
     
-	/**
+    /**
      * Set the post capability type
      *
      * Accepts the capability type name
      *
      * @param string $type capability type
      * 
-	*/
-	 
-	public function post_type($type='post')
-	{
-		// set the capability_type
-		$this->post_type = $type;
-	}
-	
-	/**
+    */
+     
+    public function post_type($type='post')
+    {
+        // set the capability_type
+        $this->post_type = $type;
+    }
+    
+    /**
      * Callback function
      *
      * Accepts the function name
      *
      * @param string $func the function name
      * 
-	*/
+    */
     public function add_init($func)
-	{
-		// simple action method
+    {
+        // simple action method
         add_action('init', array($this, $func));
-	}
+    }
     
-	/**
+    /**
      * Callback function for updated message
      *
      * Accepts the function name
      *
      * @param string $func the function name
      * 
-	*/
+    */
     public function updated_message($func)
-	{
-		// simple filter method
+    {
+        // simple filter method
         add_filter('post_updated_messages', array($this, $func));
-	}
+    }
 
-	
-	/**
+    
+    /**
      * Set the supports details
      *
      * Accepts the custom support array
      * 
      * @param array $config the support array
      * 
-	*/
+    */
     public function supports($config)
-	{
+    {
         // this array will contain supports data
         $args = array();
         
-		// set default support
-        if (empty($config))
-		{
+        // set default support
+        if (empty($config)) {
             $args = array(
                 'title',
                 'editor',
                 'thumbnail'
             );
-		}
-        else
-		{
+        } else  {
             $args = $config;
-		}
+        }
         
-		// set the support array
+        // set the support array
         $this->supports_args = $args;
-	}
+    }
     
-    	
-	/**
+        
+    /**
      * Change default labels
      * 
      * @param array $config the support array
      * 
-	*/
+    */
     public function change_labels($config = array())
-	{
+    {
         
-		// get the type name
+        // get the type name
         $name  = $this->type_name;
-		
-		// make the name capitalize
-        $uname = ucwords($name);
         
-		// set default labels for post type
+        // make the name capitalize
+        $uname = ucwords( str_replace("_", " ", $name) );
+        
+        // set default labels for post type
         $defaults = array(
             'name' => $uname . 's',
             'singular_name' => $uname,
@@ -160,27 +157,27 @@ class Alc_post_type
             'menu_name' => $uname . 's'
         );
         
-		// parse both arguments
+        // parse both arguments
         $args = wp_parse_args($config, $defaults);
         
-		// set labels
+        // set labels
         $this->label_args = $args;
-	}
+    }
     
-		
-	/**
+        
+    /**
      * Change WordPress default notification message
      * 
      * @return array the new updated message
      * 
-	*/
+    */
     public function change_messages($messages)
-	{
+    {
         
-		// make name capitalize
+        // make name capitalize
         $name = ucwords($this->type_name);
         
-		// Change notification messages
+        // Change notification messages
         $messages[$this->type_name][1]  = $name . ' updated.';
         $messages[$this->type_name][4]  = $name . ' updated.';
         $messages[$this->type_name][6]  = $name . ' published.';
@@ -189,20 +186,20 @@ class Alc_post_type
         $messages[$this->type_name][9]  = $name . ' scheduled successfully.';
         $messages[$this->type_name][10] = $name . ' draft updated.';
         
-		// return message
+        // return message
         return $messages;
         
-	}
+    }
     
-    	
-	/**
+        
+    /**
      * Create a new post type
      * 
-	*/
-	
+    */
+    
     public function create_post_type()
-	{
-		// register post type
+    {
+        // register post type
         register_post_type($this->type_name, array(
             'labels' => $this->label_args,
             '_builtin' => false,
@@ -218,11 +215,11 @@ class Alc_post_type
             'supports' => $this->supports_args
         ));
         
-	}
+    }
     
     
-    	
-	/**
+        
+    /**
      * Set taxonomy labels
      *
      * Accepts the post type name
@@ -230,15 +227,15 @@ class Alc_post_type
      * @param string $name the post type name
      * 
      * @return array return the the new labels array
-	*/
-	
+    */
+    
     public function tax_labels($name)
-	{
+    {
         
-		// make name capitalize
-        $uname = ucwords($name);
+        // make name capitalize
+        $uname = ucwords( str_replace("_", " ", $name) );
         
-		// set tax labels
+        // set tax labels
         $args = array(
             'name' => $uname,
             'singular_name' => $uname,
@@ -258,14 +255,14 @@ class Alc_post_type
             'menu_name' => $uname
         );
         
-		// return the label arguments
+        // return the label arguments
         return $args;
         
-	}
+    }
     
     
-    	
-	/**
+        
+    /**
      * Register the taxonomy
      *
      * Accepts the taxonomy name and taxonomy type
@@ -273,30 +270,30 @@ class Alc_post_type
      * @param string $name the taxonomy name
      * @param string $type the taxonomy type, cats or tags
      * 
-	*/
-	
+    */
+    
     public function add_tax($name, $type = 'cats')
-	{
-		// get the name
+    {
+        // get the name
         $lname = strtolower($name);
-		
-		// make name capitalize
+        
+        // make name capitalize
         $uname = ucwords($name);
         
-		// taxonomy type tags or category?
+        // taxonomy type tags or category?
         if ($type == 'tags')
-          {
+        {
             $hierarchical = false;
-          }
+        }
         else
-          {
+        {
             $hierarchical = true;
-          }
+        }
         
         // get the labels
         $labels = $this->tax_labels($lname);
         
-		// set-up the parameters
+        // set-up the parameters
         $args = array(
             'hierarchical' => $hierarchical,
             'labels' => $labels,
@@ -309,12 +306,12 @@ class Alc_post_type
             )
         );
         
-		// register the taxonomy
+        // register the taxonomy
         register_taxonomy($lname, $this->type_name, $args);
         
-		// call the method
-        $this->add_init(add_tax);
-	}
+        // call the method
+        $this->add_init('add_tax');
+    }
     
 }
 
@@ -331,11 +328,11 @@ $video->post_type('page');
 
 // You can use your own labels
 $custom_labels = array(
-			'add_new' => 'Create New',
-			'add_new_item' => 'Add New Item',
-		);
-		
-// pass the label container array		
+            'add_new' => 'Create New',
+            'add_new_item' => 'Add New Item',
+        );
+        
+// pass the label container array       
 $video->change_labels($custom_labels);
 
 // you can also define post supports
