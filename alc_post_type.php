@@ -22,6 +22,8 @@ class Alc_post_type
 {
     
     public $type_name;
+    public $name;
+    public $name_plural;
     public $type_type;
     public $label_args;
     public $supports_args;
@@ -37,11 +39,20 @@ class Alc_post_type
      * 
      */
      
-    function __construct($name = '', $supports = array())
+    function __construct($name = '', $supports = array(), $plural = '' )
     {
         
         // set post type name
         $this->type_name = strtolower($name);
+
+        // allow user to change default name
+        $this->name = ucwords(str_replace("_", " ", $name));
+
+        // check if plural phase is given
+        if( $plural )
+            $this->name_plural = $plural;
+        else
+            $this->name_plural = $this->name.'s';
         
         // call internal methods
         $this->change_labels();
@@ -51,6 +62,7 @@ class Alc_post_type
         $this->updated_message('change_messages');
         $this->add_init('create_post_type');
     }
+
     
     /**
      * Set the post capability type
@@ -138,23 +150,24 @@ class Alc_post_type
         $name  = $this->type_name;
         
         // make the name capitalize
-        $uname = ucwords( str_replace("_", " ", $name) );
+        $uname = $this->name;
+        $uname_plural = $this->name_plural;
         
         // set default labels for post type
         $defaults = array(
-            'name' => $uname . 's',
+            'name' => $uname_plural,
             'singular_name' => $uname,
             'add_new' => 'Add New',
             'add_new_item' => 'Add New ' . $uname,
             'edit_item' => 'Edit ' . $uname,
             'new_item' => 'New ' . $uname,
-            'all_items' => 'All ' . $uname . 's',
+            'all_items' => 'All ' . $uname_plural,
             'view_item' => 'View ' . $uname,
-            'search_items' => 'Search ' . $uname . 's',
-            'not_found' => 'No ' . $uname . 's found',
-            'not_found_in_trash' => 'No ' . $uname . 's found in Trash',
+            'search_items' => 'Search ' . $uname_plural,
+            'not_found' => 'No ' . $uname_plural . ' found',
+            'not_found_in_trash' => 'No ' . $uname_plural . ' found in Trash',
             'parent_item_colon' => '',
-            'menu_name' => $uname . 's'
+            'menu_name' => $uname_plural
         );
         
         // parse both arguments
@@ -175,7 +188,7 @@ class Alc_post_type
     {
         
         // make name capitalize
-        $name = ucwords($this->type_name);
+        $name = $this->name;
         
         // Change notification messages
         $messages[$this->type_name][1]  = $name . ' updated.';
